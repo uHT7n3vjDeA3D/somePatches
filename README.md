@@ -1,0 +1,3 @@
+### There are some patches for some browser's clients, like games, etc...
+
+There is a demonstration inside almost every folder, check their readme.
