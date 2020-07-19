@@ -1,8 +1,9 @@
 It's the [owner](https://github.com/alienoob) of the original scripts.
 The original scripts is [here](https://github.com/alienoob/miniroyale-cheats/)
 
-I just added feature, that shows distances to enemies.
+I just added some features.
 
-Video demonstration is [here](https://t.me/demonstrationroom/4).
+Video demonstration is here: [Telegram](https://t.me/demonstrationroom/7).
+The game is https://miniroyale2.io/
 
-Patch is able to work by July 2020.
+Patch is able to work by September 2020.
