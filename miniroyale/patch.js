@@ -11,7 +11,7 @@
   const wrapper = document.createElement('div');
   wrapper.style.cssText = 'z-index: 9999; width: 100%;display: flex;position: absolute;justify-content: center;flex-direction: column;align-items: center;';
   wrapper.innerHTML = `
-    <div style="height: 36px;/*! display: none; */position: relative;">
+    <div style="height: 36px;position: relative;">
       <div style="height: 100%;width: 100%;position: absolute;">
         <div style="width: 100%;height: 100%;background-color: white;opacity: 0.5;"></div>
       </div>
@@ -64,7 +64,7 @@
         </div>
       </div>
     </div>
-    <div style="height: 100%;display: flex;align-items: center;flex-direction: column;justify-content: center;z-index: 1;position: relative;"></div>`;
+    <div style="height: 100%;display: none;align-items: center;flex-direction: column;justify-content: center;z-index: 1;position: relative;"></div>`;
 
   document.body.appendChild(wrapper);
 
@@ -81,49 +81,31 @@
     window.clearInterval(interval);
   }
 
-  function objectDefineProperty(obj, prop, set, get, enumerable, configurable, writable, value) {
-    let descriptor = {};
-    if(set){
-      descriptor.set = set;
-    } else if(get){
-      descriptor.get = get;
-    } else if(enumerable){
-      descriptor.enumerable = enumerable;
-    } else if(configurable){
-      descriptor.configurable = configurable;
-    } else if(writable){
-      descriptor.writable = writable;
-    } else if(value){
-      descriptor.value = value;
-    }
-    Object.defineProperty(obj, prop, descriptor);
-  }
-
   const interfaceBar = wrapper.children[0];
-  objectDefineProperty(interfaceBar, 'patchStatus', (text)=>{
+  Object.defineProperty(interfaceBar, 'patchStatus', { set(text){
     wrapper.children[0].children[1].children[0].children[0].children[0].innerHTML = text;
-  });
+  }});
   const damageMultiplier = {};
-  objectDefineProperty(damageMultiplier, 'color', (color)=>{
+  Object.defineProperty(damageMultiplier, 'color', { set(color){
     wrapper.children[0].children[1].children[1].children[1].style.backgroundColor = color;
-  });
-  objectDefineProperty(damageMultiplier, 'text', (text)=>{
+  }});
+  Object.defineProperty(damageMultiplier, 'text', { set(text){
     wrapper.children[0].children[1].children[1].children[1].children[0].innerHTML = text;
-  });
+  }});
   const damageSwitcher = {};
-  objectDefineProperty(damageSwitcher, 'color', (color)=>{
+  Object.defineProperty(damageSwitcher, 'color', { set(color){
     wrapper.children[0].children[1].children[2].children[1].style.backgroundColor = color;
-  });
-  objectDefineProperty(damageSwitcher, 'text', (text)=>{
+  }});
+  Object.defineProperty(damageSwitcher, 'text', { set(text){
     wrapper.children[0].children[1].children[2].children[1].children[0].innerHTML = text;
-  });
+  }});
   const trackingSwitcher = {};
-  objectDefineProperty(trackingSwitcher, 'color', (color)=>{
+  Object.defineProperty(trackingSwitcher, 'color', { set(color){
     wrapper.children[0].children[1].children[3].children[1].style.backgroundColor = color;
-  });
-  objectDefineProperty(trackingSwitcher, 'text', (text)=>{
+  }});
+  Object.defineProperty(trackingSwitcher, 'text', { set(text){
     wrapper.children[0].children[1].children[3].children[1].children[0].innerHTML = text;
-  });
+  }});
 
   const interfaceNotifications = wrapper.children[1];
   const addNotification = (function () {
@@ -140,22 +122,17 @@
       </div>`;
       return container;
     };
-    const clearOrphanage = (function () {
-      let isRemoving = false;
-      return function () {
-        if (orphanage.length > 2 && !isRemoving) {
-          isRemoving = true;
-          try {
-            interfaceNotifications.removeChild(orphanage[i]);
-          } catch (e) {
-          } finally {
-            orphanage.splice(0, 1);
-          }
-          isRemoving = false;
-          clearOrphanage();
+    const clearOrphanage = function () {
+      if (orphanage.length > 2) {
+        try {
+          interfaceNotifications.removeChild(orphanage[0]);
+        } catch (e) {
+        } finally {
+          orphanage.splice(0, 1);
         }
-      };
-    })();
+        clearOrphanage();
+      }
+    };
     return function (message, color) {
       let child = notification(message, color);
       orphanage.push(child);
